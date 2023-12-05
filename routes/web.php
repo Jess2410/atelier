@@ -1,9 +1,11 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
-use App\Http\Controllers\CartController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\CartController;
+use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -11,79 +13,59 @@ use App\Http\Controllers\ProductController;
 |--------------------------------------------------------------------------
 |
 | Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "web" middleware group. Now create something great!
 |
 */
 
 Route::get('/', function () {
-    return view('welcome');
-});
-Route::get('/mon-profil', function () {
-    return "Mon profil";
-});
-Route::post('/login', function (Request $request) {
-    $name = $request->name;
-    return "<h1>Bonjour ". $name . "</h1>";
-});
-Route::any('/any', function () {
-    return "Any";
+    return Inertia::render('Welcome', [
+        'canLogin' => Route::has('login'),
+        'canRegister' => Route::has('register'),
+        'laravelVersion' => Application::VERSION,
+        'phpVersion' => PHP_VERSION,
+    ]);
 });
 
-// Atelier Catalogue
+Route::get('/dashboard', function () {
+    return Inertia::render('Dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
 
-    //Create a product
-    Route::post('/products', [ProductController::class, 'addProduct'])
-        ->name('products.addProduct');
+ //Create a product
+ Route::post('/products', [ProductController::class, 'addProduct'])
+ ->name('products.addProduct');
 
-    //Read all products
-    Route::get('/products', [ProductController::class, 'showAllProducts'])
-        ->name('products.showAllProducts');
+//Read all products
+Route::get('/products', [ProductController::class, 'showAllProducts'])
+ ->name('products.showAllProducts');
 
-    //Read a product by id
-    Route::get('/products/{id}', [ProductController::class, 'showProductById'])
-        ->name('products.showProductById');
+//Read a product by id
+Route::get('/products/{id}', [ProductController::class, 'showProductById'])
+ ->name('products.showProductById');
 
-    //Update a product by id
-    Route::put('/products/{id}', [ProductController::class, 'updateProductById'])
-        ->name('products.updateProductById');
+//Update a product by id
+Route::put('/products/{id}', [ProductController::class, 'updateProductById'])
+ ->name('products.updateProductById');
 
-    //Delete a product by id
-    Route::delete('/products/{id}', [ProductController::class, 'deleteProductById'])
-        ->name('products.deleteProductById');
+//Delete a product by id
+Route::delete('/products/{id}', [ProductController::class, 'deleteProductById'])
+ ->name('products.deleteProductById');
 
-    //Connect an user
-    Route::post('/login', [UserController::class, 'login'])
-        ->name('users.login');
+//Read the cart
+Route::get('/cart', [CartController::class, 'showCart'])
+ ->name('cart.showCart');
 
-    //Create a user
-    Route::post('/users', [UserController::class, 'addUser'])
-        ->name('users.addUser');
+//Add a product in the cart
+Route::post('/cart', [CartController::class, 'addCart'])
+ ->name('cart.addProductById');
+//Delete a product in the cart
+Route::delete('/cart', [CartController::class, 'deleteProductById'])
+ ->name('cart.deleteProductById');
 
-    //Read all users
-    Route::get('/users', [UserController::class, 'showAllUsers'])
-        ->name('users.showAllUsers');
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
 
-    //Read an user by id
-    Route::get('/users/{id}', [UserController::class, 'showUserById'])
-        ->name('users.showUserById');
-
-    //Update an user by id
-    Route::put('/users/{id}', [UserController::class, 'updateUserById'])
-        ->name('users.updateUserById');
-
-    //Delete an user by id
-    Route::delete('/users/{id}', [UserController::class, 'deleteUserById'])
-        ->name('users.deleteUserById');
-
-    //Read the cart
-    Route::get('/cart', [CartController::class, 'showCart'])
-        ->name('cart.showCart');
-
-    //Add a product in the cart
-    Route::post('/cart', [CartController::class, 'addCart'])
-        ->name('cart.addProductById');
-    //Delete a product in the cart
-    Route::delete('/cart', [CartController::class, 'deleteProductById'])
-        ->name('cart.deleteProductById');
-
+require __DIR__.'/auth.php';

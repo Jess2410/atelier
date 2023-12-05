@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\ProductController;
 
 /*
 |--------------------------------------------------------------------------
@@ -79,7 +81,7 @@ Route::any('/any', function () {
         ->name('cart.showCart');
 
     //Add a product in the cart
-    Route::post('/cart', [CartController::class, 'addProductById'])
+    Route::post('/cart', [CartController::class, 'addCart'])
         ->name('cart.addProductById');
     //Delete a product in the cart
     Route::delete('/cart', [CartController::class, 'deleteProductById'])

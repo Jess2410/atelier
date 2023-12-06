@@ -10,22 +10,25 @@ use App\Http\Models\Product;
 
 class CartController extends Controller
 {
-    public function addCart($productId)
+     public function addToCart(Request $request, $productId)
     {
-        $product = Product::find($productId);
+     
+        $cartItem = Cart::where('product_id', $productId)->first();
 
-        if ($product) {
-            $cartCounter = new Collection();
-
-            $cartCounter->push([
-                'product' => $product,
-                'quantity' => 1,
+        if ($cartItem) {
+          
+            $cartItem->increment('quantity');
+        } else {
+            
+            Cart::create([
+                'product_id' => $productId,
+                'quantity' => 1
             ]);
-
-            return redirect()->route('cart.show');
-
         }
+
+        return response()->json(['message' => 'Product added to cart successfully']);
     }
+    
 
     public function showCart()
     {  

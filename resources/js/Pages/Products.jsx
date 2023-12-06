@@ -2,10 +2,18 @@ import { Link, Head } from "@inertiajs/react";
 import { useState } from "react";
 import { FaShoppingCart } from "react-icons/fa";
 
-export default function Welcome({ auth, products, addCart }) {
+export default function Welcome({ auth, products }) {
   console.log(products, "test produits");
 
-  const [cartItemCount, setCartItemCount] = useState(3);
+  const [cart, setCart] = useState([]);
+
+  const addCart = (productId) => {
+    const productToAdd = products.find((product) => product.id === productId);
+    setCart([...cart, productToAdd]);
+  };
+
+  const cartItemCount = cart.length;
+
   return (
     <>
       <Head title="Products" />
@@ -21,6 +29,21 @@ export default function Welcome({ auth, products, addCart }) {
                 {cartItemCount}
               </div>
             )}
+            {cartItemCount > 0 && (
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md absolute top-12 right-2">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+              Panier
+            </h2>
+            <ul>
+              {cart.map((item) => (
+                <li key={item.id}>
+                  <p>{item.name}</p>
+                  <p>${item.price}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
           </div>
         </nav>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">

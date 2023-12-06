@@ -7,13 +7,21 @@ use Illuminate\Support\Collection;
 use Illuminate\Http\Request;
 
 use App\Http\Models\Product;
+use App\Http\Models\Cart;
+
+use Inertia\Inertia;
 
 class CartController extends Controller
 {
      public function addToCart(Request $request, $productId)
     {
      
-        $cartItem = Cart::where('product_id', $productId)->first();
+        $request->validate([
+            'product_id' => 'required|number|max:255',
+          ]);
+
+
+        $cartItem = Cart::where('product_id', $productId)->first(); 
 
         if ($cartItem) {
           
@@ -21,7 +29,7 @@ class CartController extends Controller
         } else {
             
             Cart::create([
-                'product_id' => $productId,
+                'product_id' => $request->product_id,
                 'quantity' => 1
             ]);
         }
@@ -34,6 +42,6 @@ class CartController extends Controller
     {  
         $cartCounter = new Collection(); 
 
-        return view('cart', ['cartCounter' => $cartCounter]);
+        return Inertia::render('Cart', ['cartCounter' => $cartCounter]);
     }
 }

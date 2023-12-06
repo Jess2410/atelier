@@ -53,11 +53,11 @@ Route::delete('/products/{id}', [ProductController::class, 'deleteProductById'])
 
 //Read the cart
 Route::get('/cart', [CartController::class, 'showCart'])
- ->name('cart.showCart');
+    ->name('cart.show');
 
-
-Route::post('/add-to-cart/{productId}', [CartController::class, 'addToCart'])
-->name('cart.store');
+//Add a product into the cart
+Route::post('/cart/add', [CartController::class, 'addToCart'])
+    ->name('cart.add');
 
 
 //Delete a product in the cart

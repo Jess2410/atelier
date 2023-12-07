@@ -7,18 +7,19 @@ export default function Welcome({ auth, products }) {
 
   const [cart, setCart] = useState([]);
 
-  const addCart = (productId) => {
-    const productAdded = products.find((product) => product.id === productId);
+  const addCart = (product_id) => {
+    const productAdded = products.find((product) => product.id === product_id);
     setCart([...cart, productAdded]);
-    post(route("cart.add"));
+
     //pour faire passer le state 'cart' au back
-    /*  fetch(`/cart/add/${productId}`, {
+    fetch(`/cart/add`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Accept: "application/json",
       },
-      body: JSON.stringify({ productId }),
-    }); */
+      body: JSON.stringify({ product_id }),
+    });
   };
 
   const cartItemCount = cart.length;

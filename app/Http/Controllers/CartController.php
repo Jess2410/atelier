@@ -6,30 +6,32 @@ use Illuminate\Support\Collection;
 
 use Illuminate\Http\Request;
 
-use App\Http\Models\Product;
-use App\Http\Models\Cart;
+use App\Models\Product;
+use App\Models\Cart;
 
 use Inertia\Inertia;
 
 class CartController extends Controller
 {
-     public function addToCart(Request $request, $productId)
+     public function addToCart(Request $request)
     {
-     
-        $request->validate([
-            'product_id' => 'required|number|max:255',
+     // récupération de la valeur de la requête POST
+        $validated = $request->validate([
+        'product_id' => 'required|numeric|max:5',
           ]);
+          // on renomme le product_id en id
+        $id = $validated['product_id'];
 
-
-        $cartItem = Cart::where('product_id', $productId)->first(); 
+        $cartItem = Cart::where('product_id', $id)->first(); 
 
         if ($cartItem) {
           
             $cartItem->increment('quantity');
-        } else {
-            
+            $cartItem->save();
+        } else {  
             Cart::create([
-                'product_id' => $request->product_id,
+                'user_id' => 1,
+                'product_id' => $id,
                 'quantity' => 1
             ]);
         }

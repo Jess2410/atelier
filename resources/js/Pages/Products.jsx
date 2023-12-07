@@ -2,7 +2,8 @@ import { Link, Head } from "@inertiajs/react";
 import { useState } from "react";
 import { FaShoppingCart } from "react-icons/fa";
 
-export default function Welcome({ auth, products }) {
+export default function Product({ auth, products, cartItems }) {
+  console.log("🚀 ~ file: Products.jsx:6 ~ Product ~ cart:", cartItems);
   console.log(products, "test produits");
 
   const [cart, setCart] = useState([]);
@@ -22,7 +23,7 @@ export default function Welcome({ auth, products }) {
     });
   };
 
-  const cartItemCount = cart.length;
+  const cartItemCount = cartItems.length;
 
   return (
     <>
@@ -33,12 +34,14 @@ export default function Welcome({ auth, products }) {
             GameGlam
           </div>
           <div className="flex items-center relative">
-            <FaShoppingCart className="text-gray-600 dark:text-gray-300 text-xl mr-4" />
-            {cartItemCount > 0 && (
-              <div className=" bg-red-500 text-white text-xs font-semibold rounded-full w-5 h-5 flex items-center justify-center absolute top-3 right-0">
-                {cartItemCount}
-              </div>
-            )}
+            <Link href="/cart">
+              <FaShoppingCart className="text-gray-600 dark:text-gray-300 text-xl mr-4" />
+              {cartItemCount > 0 && (
+                <div className=" bg-red-500 text-white text-xs font-semibold rounded-full w-5 h-5 flex items-center justify-center absolute top-3 right-0">
+                  {cartItemCount}
+                </div>
+              )}
+            </Link>
           </div>
         </nav>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">

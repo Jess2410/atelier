@@ -4,8 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Http\Models\Product;
-use App\Http\Models\User;
+use App\Models\Product;
+use App\Models\User;
 
 
 class Cart extends Model

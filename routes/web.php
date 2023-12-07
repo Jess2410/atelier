@@ -51,18 +51,18 @@ Route::put('/products/{id}', [ProductController::class, 'updateProductById'])
 Route::delete('/products/{id}', [ProductController::class, 'deleteProductById'])
  ->name('products.deleteProductById');
 
-//Read the cart
-Route::get('/cart', [CartController::class, 'showCart'])
-    ->name('cart.show');
+//Get the cart
+Route::get('/cart', [CartController::class, 'getCart'])
+    ->name('cart.get');
 
 //Add a product into the cart
 Route::post('/cart/add', [CartController::class, 'addToCart'])
     ->name('cart.add');
 
 
-//Delete a product in the cart
-Route::delete('/cart', [CartController::class, 'deleteProductById'])
- ->name('cart.deleteProductById');
+//Delete a product to the cart
+Route::delete('/cart/delete', [CartController::class, 'deleteToCart'])
+ ->name('cart.delete');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

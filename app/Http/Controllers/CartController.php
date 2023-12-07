@@ -40,10 +40,37 @@ class CartController extends Controller
     }
     
 
-    public function showCart()
+    public function getCart()
     {  
-        $cartCounter = new Collection(); 
 
-        return Inertia::render('Cart', ['cartCounter' => $cartCounter]);
+        $cart = Cart::with('user','product')->get();
+        
+
+
+        return Inertia::render('Cart', [
+             'cart' => $cart
+        ]);
     }
+    
+    public function deleteToCart(Request $request){
+        try {
+            $cartItem = Cart::findOrFail($request->id);
+            $cartItem->delete();
+    
+            return response()->json(['message' => 'Cart item deleted successfully']);
+            
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json(['message' => 'Cart item not found'], 404);
+        }
+    }
+    // {
+    //     $cartItem = Cart::findOrFail($request->id);
+    //     $cartItem->delete();
+
+    //     return redirect()->route('cart.add')
+    //     ->with('success', 'Cart item deleted successfully');
+    // }
+    
+
+  
 }
